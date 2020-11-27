@@ -32,7 +32,7 @@ public class WorkerResource {
     @GetMapping(value = "/{id}")
     public ResponseEntity<Worker> findById(@PathVariable Long id){
         logger.info("PORT = " + env.getProperty("local.server.port"));
-
+//
 //        try {//teste timeout
 //            Thread.sleep(3000L);
 //        } catch (InterruptedException e) {
