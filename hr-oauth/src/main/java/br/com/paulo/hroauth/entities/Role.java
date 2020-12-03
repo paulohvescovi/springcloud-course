@@ -4,14 +4,14 @@ import lombok.*;
 
 import java.io.Serializable;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
 @EqualsAndHashCode(of = "roleName")
 public class Role implements Serializable {
 
-    private Long id;
-    private String roleName;
+	private Long id;
+	private String roleName;
 
 }
