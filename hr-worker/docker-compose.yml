@@ -1,0 +1,101 @@
+version: '3.5'
+services:
+
+  postgres-hr-worker:
+    container_name: hr-worker-pg12
+    image: postgres:12-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=1234567
+      - POSTGRES_DB=db_hr_worker
+      - POSTGRES_USER=postgres
+    networks:
+      - hr-net
+    restart: unless-stopped
+
+  postgres-hr-user:
+    container_name: hr-user-pg12
+    image: postgres:12-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=1234567
+      - POSTGRES_DB=db_hr_user
+      - POSTGRES_USER=postgres
+    networks:
+      - hr-net
+    restart: unless-stopped
+
+  config-server:
+    image: paulohvescovi/hr-config-server
+    container_name: hr-config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - hr-net
+    environment:
+      - GITHUB_USERNAME=UsernameDoGitAqui
+      - GITHUB_PASSWORD=SenhaDoGitAqui
+
+  eureka-server:
+    image: paulohvescovi/hr-eureka-server
+    container_name: hr-eureka-server
+    restart: always
+    ports:
+      - "8761:8761"
+    networks:
+      - hr-net
+    depends_on:
+      - "config-server"
+
+  api-gateway-zuul:
+    image: paulohvescovi/hr-api-gateway-zuul
+    container_name: hr-api-gateway-zull
+    restart: always
+    ports:
+      - "8765:8765"
+    networks:
+      - hr-net
+    depends_on:
+      - "config-server"
+
+  hr-worker:
+    image: paulohvescovi/hr-worker
+    container_name: hr-worker
+    restart: always
+    networks:
+      - hr-net
+    depends_on:
+      - "eureka-server"
+
+  hr-user:
+    image: paulohvescovi/hr-user
+    container_name: hr-user
+    restart: always
+    networks:
+      - hr-net
+    depends_on:
+      - "eureka-server"
+
+  hr-payroll:
+    image: paulohvescovi/hr-payroll
+    container_name: hr-payroll
+    restart: always
+    networks:
+      - hr-net
+    depends_on:
+      - "eureka-server"
+
+  hr-oauth:
+    image: paulohvescovi/hr-oauth
+    container_name: hr-oauth
+    restart: always
+    networks:
+      - hr-net
+    depends_on:
+      - "eureka-server"
+
+networks:
+  hr-net:
+    driver: bridge
