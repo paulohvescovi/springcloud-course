@@ -35,8 +35,8 @@ services:
     networks:
       - hr-net
     environment:
-      - GITHUB_USERNAME=UsernameDoGitAqui
-      - GITHUB_PASSWORD=SenhaDoGitAqui
+      - GITHUB_USERNAME=paulohvescovi
+      - GITHUB_PASSWORD=P@ulo2121748259
 
   eureka-server:
     image: paulohvescovi/hr-eureka-server
